@@ -37,7 +37,7 @@ The 'react-native-communications' library provides methods to initiate phone cal
     * cd contact_app
     * npm install
  * Run the app on a simulator or a physical device:
-      *npx react-native run-android
+    * npx react-native run-android
       
 * Make sure you have the appropriate development environment set up for running React Native apps on your android platform.
 
