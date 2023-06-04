@@ -27,6 +27,7 @@ export default function App() {
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [search, setSearch] = useState('');
   const [show, setShow] = useState(false);
+  const [searchResult , setSearchResult] = useState(true)
   const [selectedContactName, setSelectedContactName] = useState<string>('');
   const [selectedContactNumber, setSelectedContactNumber] =
     useState<string>('');
@@ -72,9 +73,11 @@ export default function App() {
       });
       setFilteredContact(newData);
       setSearch(text);
+      setSearchResult(newData.length > 0);
     } else {
       setFilteredContact(contacts);
       setSearch(text);
+      setSearchResult(true);
     }
   };
 
@@ -111,68 +114,74 @@ export default function App() {
       {/* Contact-fetched section */}
 
       <FlatList
-        data={filteredContact}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({item, index}) => {
-          return (
-            <TouchableOpacity
-              onPress={() => {
-                updateModal(
-                  item.displayName.toString(),
-                  item.phoneNumbers[0].number.toString(),
-                );
-              }}
-              style={styles.contactCard}>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <Image
-                  source={require('./src/images/user.png')}
-                  style={styles.image}
-                />
-                <View style={{padding: 10}}>
-                  <Text style={styles.textName}>{item.displayName}</Text>
-                  <Text style={styles.textPhone}>
-                    {item.phoneNumbers[0].number}
-                  </Text>
-                </View>
-              </View>
-
-              {/* Messaging  section */}
-
-              <View style={{flexDirection: 'row', paddingRight: 15}}>
-                <TouchableOpacity
-                  onPress={() => {
-                    const url = Communications.text(
-                      item.phoneNumbers[0].number,
-                    );
-                  }}>
-                  <Image
-                    source={require('./src/images/message.png')}
-                    style={{
-                      width: 30,
-                      height: 30,
-                      tintColor: 'orange',
-
-                      marginRight: 20,
-                    }}
-                  />
-                </TouchableOpacity>
-
-                {/* Calling   section */}
-
-                <TouchableOpacity
-                  onPress={() => {
-                    Linking.openURL(`tel:${item.phoneNumbers[0].number}`);
-                  }}>
-                  <Image
-                    source={require('./src/images/call.png')}
-                    style={{width: 30, height: 30, tintColor: 'green'}}
-                  />
-                </TouchableOpacity>
-              </View>
-            </TouchableOpacity>
+  data={filteredContact}
+  keyExtractor={(item, index) => index.toString()}
+  renderItem={({item, index}) => {
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          updateModal(
+            item.displayName.toString(),
+            item.phoneNumbers[0].number.toString(),
           );
         }}
-      />
+        style={styles.contactCard}>
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <Image
+            source={require('./src/images/user.png')}
+            style={styles.image}
+          />
+          <View style={{padding: 10}}>
+            <Text style={styles.textName}>{item.displayName}</Text>
+            <Text style={styles.textPhone}>
+              {item.phoneNumbers[0].number}
+            </Text>
+          </View>
+        </View>
+
+        {/* Messaging  section */}
+
+        <View style={{flexDirection: 'row', paddingRight: 15}}>
+          <TouchableOpacity
+            onPress={() => {
+              const url = Communications.text(
+                item.phoneNumbers[0].number,
+              );
+            }}>
+            <Image
+              source={require('./src/images/message.png')}
+              style={{
+                width: 30,
+                height: 30,
+                tintColor: 'orange',
+
+                marginRight: 20,
+              }}
+            />
+          </TouchableOpacity>
+
+          {/* Calling   section */}
+
+          <TouchableOpacity
+            onPress={() => {
+              Linking.openURL(`tel:${item.phoneNumbers[0].number}`);
+            }}>
+            <Image
+              source={require('./src/images/call.png')}
+              style={{width: 30, height: 30, tintColor: 'green'}}
+            />
+          </TouchableOpacity>
+        </View>
+      </TouchableOpacity>
+    );
+  }}
+  ListEmptyComponent={() => (
+    <View style={styles.noContactsContainer}>
+      <Text style={styles.noContactsText}>No contacts found.</Text>
+    </View>
+  )}
+/>
+
 
       {/* contact-data Card end */}
 
@@ -194,7 +203,7 @@ export default function App() {
                 }}>
                 <Image
                   source={require('./src/images/cancel.png')}
-                  style={{width: 30, height: 30,tintColor:'red'}}
+                  style={{width: 30, height: 30, tintColor: 'red'}}
                 />
               </TouchableOpacity>
             </View>
@@ -220,7 +229,7 @@ export default function App() {
                 }}>
                 <Image
                   source={require('./src/images/message.png')}
-                  style={{width: 50, height: 50,tintColor:'orange'}}
+                  style={{width: 50, height: 50, tintColor: 'orange'}}
                 />
               </TouchableOpacity>
               <TouchableOpacity
@@ -229,7 +238,7 @@ export default function App() {
                 }}>
                 <Image
                   source={require('./src/images/call.png')}
-                  style={{width: 50, height: 50,tintColor:'green'}}
+                  style={{width: 50, height: 50, tintColor: 'green'}}
                 />
               </TouchableOpacity>
             </View>
@@ -305,8 +314,17 @@ const styles = StyleSheet.create({
   textPhone: {
     fontSize: 14,
 
-    
-
     color: 'grey',
   },
+  noContactsContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 50,
+  },
+  noContactsText: {
+    fontSize: 18,
+    color: 'grey',
+  },
+  
 });
