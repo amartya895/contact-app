@@ -96,7 +96,7 @@ export default function App() {
           marginBottom: 5,
           fontWeight: 'bold',
         }}>
-        Contactss
+        Contacts
       </Text>
 
       {/* search-section */}
